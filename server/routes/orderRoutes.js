@@ -1,0 +1,3 @@
+import { Router } from 'express'; import { body } from 'express-validator'; import { protect, allowRoles } from '../middleware/auth.js'; import { validate } from '../middleware/validate.js';
+import { createOrder, listOrders, getOrder, updateOrderStatus } from '../controllers/orderController.js';
+const router = Router(); router.use(protect); router.post('/', allowRoles('student'), [body('tailorId').isMongoId(), body('measurementId').isMongoId(), body('address').trim().notEmpty(), body('items').isArray({ min: 1 })], validate, createOrder); router.get('/', listOrders); router.get('/:id', getOrder); router.put('/:id/status', allowRoles('tailor', 'admin'), updateOrderStatus); export default router;

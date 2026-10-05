@@ -1,0 +1,4 @@
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+const CartContext = createContext(null);
+export function CartProvider({ children }) { const [items, setItems] = useState(() => JSON.parse(localStorage.getItem('stichy_cart') || '[]')); useEffect(() => localStorage.setItem('stichy_cart', JSON.stringify(items)), [items]); const value = useMemo(() => ({ items, add: (product) => setItems((old) => { const current = old.find((item) => item._id === product._id); return current ? old.map((item) => item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item) : [...old, { ...product, quantity: 1 }]; }), remove: (id) => setItems((old) => old.filter((item) => item._id !== id)), clear: () => setItems([]), total: items.reduce((sum, item) => sum + item.price * item.quantity, 0) }), [items]); return <CartContext.Provider value={value}>{children}</CartContext.Provider>; }
+export const useCart = () => useContext(CartContext);

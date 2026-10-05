@@ -1,0 +1,3 @@
+import { Router } from 'express'; import { body } from 'express-validator'; import { protect, allowRoles } from '../middleware/auth.js'; import { validate } from '../middleware/validate.js';
+import { listColleges, getCollege, createCollege, updateCollege, deleteCollege } from '../controllers/catalogController.js';
+const router = Router(); router.get('/', listColleges); router.get('/:id', getCollege); router.post('/', protect, allowRoles('admin'), [body('name').trim().notEmpty()], validate, createCollege); router.put('/:id', protect, allowRoles('admin'), updateCollege); router.delete('/:id', protect, allowRoles('admin'), deleteCollege); export default router;

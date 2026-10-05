@@ -1,0 +1,2 @@
+import { Router } from 'express'; import { body } from 'express-validator'; import { protect, allowRoles } from '../middleware/auth.js'; import { validate } from '../middleware/validate.js'; import { createReview, listTailorReviews } from '../controllers/orderController.js';
+const router = Router(); router.get('/:tailorId', listTailorReviews); router.post('/', protect, allowRoles('student'), [body('orderId').isMongoId(), body('rating').isInt({ min: 1, max: 5 }), body('comment').optional().trim().isLength({ max: 1000 })], validate, createReview); export default router;

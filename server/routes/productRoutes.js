@@ -1,0 +1,3 @@
+import { Router } from 'express'; import { body } from 'express-validator'; import { protect, allowRoles } from '../middleware/auth.js'; import { validate } from '../middleware/validate.js';
+import { listProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../controllers/catalogController.js';
+const router = Router(); router.get('/', listProducts); router.get('/:id', getProduct); router.post('/', protect, allowRoles('admin'), [body('name').trim().notEmpty(), body('collegeId').isMongoId(), body('price').isFloat({ min: 0 })], validate, createProduct); router.put('/:id', protect, allowRoles('admin'), updateProduct); router.delete('/:id', protect, allowRoles('admin'), deleteProduct); export default router;
